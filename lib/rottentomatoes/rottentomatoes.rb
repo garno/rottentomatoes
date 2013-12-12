@@ -34,10 +34,15 @@ module RottenTomatoes
       end
 
       if (method == "lists")
-        url += (options[:type] == "new_releases") ? "/dvds/" : "/movies/"
-        url += options[:type]
+        url += (['new_releases', 'upcoming_releases'].include?(options[:type])) ? "/dvds/" : "/movies/"
+
+        if options[:type] == 'upcoming_releases'
+          url += 'upcoming'
+        else
+          url += options[:type]
+        end
       end
-      
+
       url += ".json" if (url[-5, 5] != ".json")
       url += "?apikey=" + @@api_key 
       url += "&q=" + CGI::escape(options[:title].to_s) if (method == "movies" && !options[:title].nil? && options[:id].nil?)
